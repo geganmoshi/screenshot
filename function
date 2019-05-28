@@ -1,0 +1,31 @@
+    def test_chrome(self,url):
+        xpath = '//img'
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-extensions")
+        driver = webdriver.Chrome("D:\ssyq\lz_sxf_scrapy_website\src\driver\chromedriver.exe",chrome_options=options)
+        driver.get(url)
+        elements = driver.find_elements_by_xpath('//img')
+        if elements is None or len(elements) != 1:
+            print 'fail'
+            driver.quit()
+            os.system('taskkill /F /im chrome.exe')
+            return False
+        element = elements[0]
+        width = element.size['width']
+        height = element.size['height']
+        if os.path.exists('C:\Users\Administrator\Desktop\\test.png'):
+           os.remove('C:\Users\Administrator\Desktop\\test.png')
+        driver.save_screenshot('C:\Users\Administrator\Desktop\\test.png')
+        img =Image.open('C:\Users\Administrator\Desktop\\test.png')
+        img_width = img.size[0]
+        img_height = img.size[1]
+        x = (img_width-width)/2
+        y = (img_height-height)/2
+        w = width + x
+        h = height + y
+        region = img.crop((x, y, w, h))
+        img_name = url.split('/')[-1]
+        region.save("C:\Users\Administrator\Desktop\keputupian\\" + img_name)
+        driver.quit()
+        os.system('taskkill /F /im chrome.exe')
+        return True
